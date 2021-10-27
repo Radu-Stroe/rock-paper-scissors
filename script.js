@@ -41,26 +41,45 @@ let playRound = (playerSelection, computerSelection) => {
 }
 
 let game = () => {
+    const buttons = document.querySelectorAll(".buttons");
+    const gameWinner = document.querySelector("h1");
+    const roundAnnouncer = document.querySelector("h2");
+    let score = document.querySelector("h3");
     let playerScore = 0;
     let computerScore = 0;
-    for(let i=0; i < 5; i++) {
-        let playerOption = prompt('Please enter your option:');
-        let answer = playRound(playerOption.toLowerCase(), computerPlay()); 
-        console.log(answer);
-        if(answer.includes('won')) {
-            playerScore++;
-        } else if (answer.includes('lost')) {
-            computerScore++;
-        }
-    }
-    console.log('Player score: ' + playerScore + ' | Computer score: ' + computerScore);
-    if(playerScore > computerScore) {
-        console.log('You won the game!');
-    } else if (playerScore < computerScore) {
-        console.log('You lost the game!');
-    } else {
-        console.log("This is a draw!");
-    }
+    let roundWinner = '';
+    
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            roundWinner = playRound(button.getAttribute('id'), computerPlay());
+            
+            if(roundWinner.includes('won')) {
+                playerScore++;
+            } else if (roundWinner.includes('lost')) {
+                computerScore++;
+            }
+            score.textContent = `Player: ${playerScore}    Computer: ${computerScore}`;
+            
+            if(playerScore === 5) {
+                gameWinner.textContent = "You won the game!";
+                roundAnnouncer.textContent = "";
+                setTimeout(() => {
+                    location.reload();
+                }, 5000);
+            } else if (computerScore === 5) {
+                gameWinner.textContent = "You lost the game!";
+                roundAnnouncer.textContent = "";
+                setTimeout(() => {
+                    location.reload();
+                }, 5000);
+            } else {
+                roundAnnouncer.textContent = roundWinner;
+            }
+        })
+    }) 
+    
+    
+    
 }
 
 game();
